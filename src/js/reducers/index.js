@@ -34,17 +34,23 @@ const postsById = (state = {}, action) => {
 
 const postsBySubreddit = (state = {}, action) => {
   switch (action.type) {
-    case RECEIVE_POSTS:
-      // YOU ARE HERE
-      // YOU ARE HERE
-      // YOU ARE HERE
-      // YOU ARE HERE
+    case REQUEST_POSTS:
+      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
+        isFetching: true
+      })
       break
     case RECEIVE_POSTS:
-      //...
+      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
+        isFetching: false,
+        didInvalidate: false,
+        posts: action.posts,
+        receivedAt: action.receivedAt
+      })
       break
     case INVALIDATE_SUBREDDIT:
-      //...
+      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
+        didInvalidate: true
+      })
       break
     default:
       state
