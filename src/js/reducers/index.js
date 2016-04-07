@@ -1,16 +1,9 @@
 import {
   SELECT_SUBREDDIT,
-  INVALIDATE_SUBREDDIT,
+  STALE_SUBREDDIT,
   REQUEST_POSTS,
   RECEIVE_POSTS
 } from '../../actions.js'
-
-const initialState = {
-  selectedSubreddit: '',
-  usersById: {},
-  postsById: {}
-  postsBySubreddit: {}
-}
 
 const selectedSubreddit = (state = 'games', action) {
   switch (action.type) {
@@ -32,24 +25,43 @@ const postsById = (state = {}, action) => {
   }
 }
 
-const postsBySubreddit = (state = {}, action) => {
+const subreddits = (state = {}, action) => {
   switch (action.type) {
     case REQUEST_POSTS:
-      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
-        isFetching: true
+    case RECEIVE_POSTS:
+    case STALE_SUBREDDIT:
+      return Object.assign({}, state,
+        [action.subreddit]: subreddit(state[action.subreddit], action)
+      }
+      break
+    default:
+      state
+  }
+}
+
+const subreddit = (state = {
+  isFetching: false,
+  stale: false,
+  posts: []
+}, action) => {
+  switch (action.type) {
+    case REQUEST_POSTS:
+      return Object.assign({}, state, {
+        isFetching: true,
+        //stale: false // Not sure we need this here
       })
       break
     case RECEIVE_POSTS:
       state[action.subreddit] = Object.assign({}, state[action.subreddit], {
         isFetching: false,
-        didInvalidate: false,
+        stale: false,
         posts: action.posts,
         receivedAt: action.receivedAt
       })
       break
-    case INVALIDATE_SUBREDDIT:
+    case STALE_SUBREDDIT:
       state[action.subreddit] = Object.assign({}, state[action.subreddit], {
-        didInvalidate: true
+        stale: true
       })
       break
     default:
@@ -57,12 +69,12 @@ const postsBySubreddit = (state = {}, action) => {
   }
 }
 
-const rootReducer = (state = initialState, action) => {
+const rootReducer = (state = {}, action) => {
   return {
     selectedSubreddit: selectedSubreddit(state.selectedSubreddit, action),
     usersById: usersById(state.usersById, action),
     postsById: postsById(state.postsById, action),
-    postsBySubreddit: postsBySubreddit(state.postsBySubreddit, action)
+    subreddits: subreddits(state.subreddits, action)
   }
 }
 
@@ -89,17 +101,17 @@ export default rootReducer
       author: 2
     }
   },
-  postsBySubreddit: {
+  subreddits: {
     frontend: {
       isFetching: true,
-      didInvalidate: false,
-      items: []
+      stale: false,
+      posts: []
     },
     reactjs: {
       isFetching: false,
-      didInvalidate: false,
+      stale: false,
       lastUpdated: 1439478405547,
-      items: [ 42, 100 ]
+      posts: [ 42, 100 ]
     }
   }
 }
