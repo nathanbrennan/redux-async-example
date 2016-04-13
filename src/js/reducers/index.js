@@ -8,10 +8,10 @@ import {
 const selectedSubreddit = (state = 'games', action) => {
   switch (action.type) {
     case SELECT_SUBREDDIT:
-      state = action.subreddit
-      break;
+      return action.subreddit
+      break
     default:
-      state
+      return state
   }
 }
 
@@ -25,7 +25,7 @@ const postsById = (state = {}, action) => {
       return Object.assign({}, state, action.posts)
       break;
     default:
-      state
+      return state
   }
 }
 
@@ -56,7 +56,7 @@ const subreddit = (state = {
       })
       break
     case RECEIVE_POSTS:
-      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
+      return Object.assign({}, state, {
         isFetching: false,
         stale: false,
         posts: action.posts,
@@ -64,12 +64,12 @@ const subreddit = (state = {
       })
       break
     case STALE_SUBREDDIT:
-      state[action.subreddit] = Object.assign({}, state[action.subreddit], {
+      return Object.assign({}, state, {
         stale: true
       })
       break
     default:
-      state
+      return state
   }
 }
 

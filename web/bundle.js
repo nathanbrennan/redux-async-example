@@ -9308,10 +9308,10 @@
 
 	  switch (action.type) {
 	    case _actions.SELECT_SUBREDDIT:
-	      state = action.subreddit;
+	      return action.subreddit;
 	      break;
 	    default:
-	      state;
+	      return state;
 	  }
 	};
 
@@ -9331,7 +9331,7 @@
 	      return _extends({}, state, action.posts);
 	      break;
 	    default:
-	      state;
+	      return state;
 	  }
 	};
 
@@ -9366,7 +9366,7 @@
 	      //stale: false // Not sure we need this here
 	      break;
 	    case _actions.RECEIVE_POSTS:
-	      state[action.subreddit] = _extends({}, state[action.subreddit], {
+	      return _extends({}, state, {
 	        isFetching: false,
 	        stale: false,
 	        posts: action.posts,
@@ -9374,12 +9374,12 @@
 	      });
 	      break;
 	    case _actions.STALE_SUBREDDIT:
-	      state[action.subreddit] = _extends({}, state[action.subreddit], {
+	      return _extends({}, state, {
 	        stale: true
 	      });
 	      break;
 	    default:
-	      state;
+	      return state;
 	  }
 	};
 
