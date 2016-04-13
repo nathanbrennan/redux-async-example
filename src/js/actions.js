@@ -1,7 +1,7 @@
 import fetch from 'isomorphic-fetch'
 
 export const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT'
-export function seletSubreddit(subreddit) {
+export function selectSubreddit(subreddit) {
   return {
     type: 'SELECT_SUBREDDIT',
     subreddit
@@ -38,7 +38,7 @@ export function fetchPosts(subreddit) {
   return (dispatch) => {
     dispatch(requestPosts(subreddit))
 
-    return fetch(`http://www.reddit.com/r/${subreddit}.json`)
+    return fetch(`https://www.reddit.com/r/${subreddit}.json`)
       .then(response => response.json())
       .then(json =>
         dispatch(receivePosts(subreddit, json))

@@ -3,9 +3,9 @@ import {
   STALE_SUBREDDIT,
   REQUEST_POSTS,
   RECEIVE_POSTS
-} from '../../actions.js'
+} from '../actions.js'
 
-const selectedSubreddit = (state = 'games', action) {
+const selectedSubreddit = (state = 'games', action) => {
   switch (action.type) {
     case SELECT_SUBREDDIT:
       state = action.subreddit
@@ -13,6 +13,10 @@ const selectedSubreddit = (state = 'games', action) {
     default:
       state
   }
+}
+
+const usersById = (state = {}, action) => {
+  return state
 }
 
 const postsById = (state = {}, action) => {
@@ -30,9 +34,9 @@ const subreddits = (state = {}, action) => {
     case REQUEST_POSTS:
     case RECEIVE_POSTS:
     case STALE_SUBREDDIT:
-      return Object.assign({}, state,
+      return Object.assign({}, state, {
         [action.subreddit]: subreddit(state[action.subreddit], action)
-      }
+      })
       break
     default:
       state

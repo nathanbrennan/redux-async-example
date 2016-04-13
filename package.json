@@ -8,7 +8,9 @@
     "react-redux": "~4.4.0",
     "redux": "~3.3.1",
     "react-dom": "~0.14.7",
-    "isomorphic-fetch": "~2.2.1"
+    "isomorphic-fetch": "~2.2.1",
+    "redux-thunk": "~2.0.1",
+    "redux-logger": "~2.6.1"
   },
   "devDependencies": {
     "webpack": "~1.12.14",
