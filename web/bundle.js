@@ -85,7 +85,7 @@
 	var store = (0, _redux.createStore)(_reducers2.default, (0, _redux.applyMiddleware)(_reduxThunk2.default, loggerMiddleware));
 
 	// store.dispatch(selectSubreddit('games'))
-	store.dispatch((0, _actions.fetchPosts)('games')).then(function () {
+	store.dispatch(fetchPostsIfNeeded('games')).then(function () {
 	  return console.log(store.getState());
 	});
 
@@ -8823,6 +8823,7 @@
 	exports.invalidateSubreddit = invalidateSubreddit;
 	exports.requestPosts = requestPosts;
 	exports.receivePosts = receivePosts;
+	exports.fetchPostsIfNeeded = fetchPostsIfNeeded;
 	exports.fetchPosts = fetchPosts;
 
 	var _isomorphicFetch = __webpack_require__(305);
@@ -8864,6 +8865,27 @@
 	      return child.data;
 	    }),
 	    receivedAt: Date.now()
+	  };
+	}
+
+	function shouldFetchPosts(state, subredditName) {
+	  var subreddit = state.subreddits[subredditName];
+	  if (subreddit.isFetching) {
+	    return false;
+	  } else if (!subreddit.posts) {
+	    return true;
+	  } else {
+	    return subreddit.isStale;
+	  }
+	}
+
+	function fetchPostsIfNeeded(subreddit) {
+	  return function (dispatch, getState) {
+	    if (shouldFetchPosts(getState(), subreddit)) {
+	      return dispatch(fetchPosts(subreddit));
+	    } else {
+	      return Promise.resolve();
+	    }
 	  };
 	}
 
@@ -9353,7 +9375,7 @@
 	var subreddit = function subreddit() {
 	  var state = arguments.length <= 0 || arguments[0] === undefined ? {
 	    isFetching: false,
-	    stale: false,
+	    isStale: false,
 	    posts: []
 	  } : arguments[0];
 	  var action = arguments[1];
@@ -9363,19 +9385,19 @@
 	      return _extends({}, state, {
 	        isFetching: true
 	      });
-	      //stale: false // Not sure we need this here
+	      //isStale: false // Not sure we need this here
 	      break;
 	    case _actions.RECEIVE_POSTS:
 	      return _extends({}, state, {
 	        isFetching: false,
-	        stale: false,
+	        isStale: false,
 	        posts: action.posts,
 	        receivedAt: action.receivedAt
 	      });
 	      break;
 	    case _actions.STALE_SUBREDDIT:
 	      return _extends({}, state, {
-	        stale: true
+	        isStale: true
 	      });
 	      break;
 	    default:
@@ -9421,12 +9443,12 @@
 	  subreddits: {
 	    frontend: {
 	      isFetching: true,
-	      stale: false,
+	      isStale: false,
 	      posts: []
 	    },
 	    reactjs: {
 	      isFetching: false,
-	      stale: false,
+	      isStale: false,
 	      lastUpdated: 1439478405547,
 	      posts: [ 42, 100 ]
 	    }

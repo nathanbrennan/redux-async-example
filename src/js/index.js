@@ -23,7 +23,7 @@ const store = createStore(
 )
 
 // store.dispatch(selectSubreddit('games'))
-store.dispatch(fetchPosts('games')).then(() =>
+store.dispatch(fetchPostsIfNeeded('games')).then(() =>
   console.log(store.getState())
 )
 

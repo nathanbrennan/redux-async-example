@@ -45,27 +45,27 @@ const subreddits = (state = {}, action) => {
 
 const subreddit = (state = {
   isFetching: false,
-  stale: false,
+  isStale: false,
   posts: []
 }, action) => {
   switch (action.type) {
     case REQUEST_POSTS:
       return Object.assign({}, state, {
         isFetching: true,
-        //stale: false // Not sure we need this here
+        //isStale: false // Not sure we need this here
       })
       break
     case RECEIVE_POSTS:
       return Object.assign({}, state, {
         isFetching: false,
-        stale: false,
+        isStale: false,
         posts: action.posts,
         receivedAt: action.receivedAt
       })
       break
     case STALE_SUBREDDIT:
       return Object.assign({}, state, {
-        stale: true
+        isStale: true
       })
       break
     default:
@@ -108,12 +108,12 @@ export default rootReducer
   subreddits: {
     frontend: {
       isFetching: true,
-      stale: false,
+      isStale: false,
       posts: []
     },
     reactjs: {
       isFetching: false,
-      stale: false,
+      isStale: false,
       lastUpdated: 1439478405547,
       posts: [ 42, 100 ]
     }
